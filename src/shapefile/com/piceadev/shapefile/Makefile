@@ -3,11 +3,18 @@ JFLAGS = -g -cp $(CLASSPATH)
 JC = javac
 .SUFFIXES: .java .class
 .java.class:
-	$(JC) $(JFLAGS) $*.java
+	$(JC) $(JFLAGS) internal/*.java $*.java
 
 CLASSES = \
 	ShapefileReader.java \
-	internal/*.java
+	internal/EsriFeatureFactory.java \
+	internal/EsriFeature.java \
+	internal/EsriPoint.java \
+	internal/EsriPolyline.java \
+	internal/LittleEndianInputStream.java \
+	internal/Shapefile.java \
+	internal/ShapefileConstants.java \
+	internal/ShpInputStream.java
 
 default: classes
 
