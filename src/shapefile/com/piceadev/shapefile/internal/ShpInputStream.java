@@ -1,29 +1,37 @@
 package com.piceadev.shapefile.internal;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.EOFException;
 import com.piceadev.shapefile.internal.EsriFeatureFactory;
 import com.piceadev.shapefile.internal.Shapefile;
 import com.piceadev.shapefile.internal.LittleEndianInputStream;
 
 public class ShpInputStream {
 
-    LittleEndianInputStream leis;
-    int shapeType;
-    int fileLength; // in 16-bit words, including 100 byte header
+    private final Logger logger = Logger.getLogger ("com.piceadev.shapefile");
 
-    public ShpInputStream (String basename) 
-        throws IOException {
+    private LittleEndianInputStream leis;
+    private int shapeType;
+    private int fileLength; // in 16-bit words, including 100 byte header
 
-        FileInputStream fis = new FileInputStream (basename + ".shp");
-        BufferedInputStream bis = new BufferedInputStream (fis);
-        leis = new LittleEndianInputStream (bis);
+    public ShpInputStream (String filename) throws IOException {
+
+        this(new File (filename));
+
+        //FileInputStream fis = new FileInputStream (filename);
+        //BufferedInputStream bis = new BufferedInputStream (fis);
+        //leis = new LittleEndianInputStream (bis);
     }
 
     public ShpInputStream (File file) 
         throws IOException {
+
+        logger.log (Level.FINE, String.format ("Attempting to open FileInputStream for %s", file.getAbsolutePath()));
 
         FileInputStream fis = new FileInputStream (file);
         BufferedInputStream bis = new BufferedInputStream (fis);
@@ -35,8 +43,7 @@ public class ShpInputStream {
     *
     * @return the shape type
     */
-   public int readHeader()
-         throws IOException {
+   public int readHeader() throws IOException {
       /* int fileCode = */leis.readInt();
       leis.skipBytes(20); // unused bytes in header
       fileLength = leis.readInt(); // in 16-bit words, including 100 byte header
@@ -67,10 +74,17 @@ public class ShpInputStream {
         return shp;
     }
 
-    private EsriFeature getNextFeature () 
-        throws IOException {
+    private EsriFeature getNextFeature () throws IOException {
+        EsriFeature nextFeature = null;
 
-        return EsriFeatureFactory.getFeature (leis);
+        try {
+            nextFeature = EsriFeatureFactory.getFeature (leis);
+        } catch (EOFException e) {
+            logger.log (Level.FINE, "Found end of file.");
+            return null;
+        }
+
+        return nextFeature;
     }
 
 }

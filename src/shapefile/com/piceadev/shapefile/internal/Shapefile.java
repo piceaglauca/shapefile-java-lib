@@ -9,6 +9,7 @@ public class Shapefile {
 
     public Shapefile (int shapeType) {
         this.shapeType = shapeType;
+        features = new ArrayList<>();
     }
 
     protected void addFeature (EsriFeature feature) {

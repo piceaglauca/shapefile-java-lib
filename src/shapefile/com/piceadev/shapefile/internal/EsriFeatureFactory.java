@@ -7,6 +7,7 @@ import com.piceadev.shapefile.internal.EsriFeature;
 import com.piceadev.shapefile.internal.EsriPoint;
 import com.piceadev.shapefile.internal.EsriPolyline;
 import com.piceadev.shapefile.internal.EsriPolygon;
+import com.piceadev.shapefile.internal.EsriConstants;
 import com.piceadev.shapefile.internal.LittleEndianInputStream;
 
 public class EsriFeatureFactory { 
@@ -31,13 +32,13 @@ public class EsriFeatureFactory {
         int contentsLength = recordLength - 8 - 4; // 8 bytes for the header, 4 bytes for the shape type
 
         switch (recordShapeType) {
-            case 1: // Point
+            case EsriConstants.POINT: // Point
                 logger.log (Level.FINE, String.format ("Feature %d is a Point feature of length %d", recordNumber, recordLength));
                 return getPointFeature (leis);
-            case 3: // Polyline
+            case EsriConstants.POLYLINE: // Polyline
                 logger.log (Level.FINE, String.format ("Feature %d is a Polyline feature of length %d", recordNumber, recordLength));
                 return getPolylineFeature (leis, contentsLength);
-            //case 5: // Polygon
+            //case EsriConstants.POLYGON: // Polygon
                 //return getPolygonFeature (leis, contentsLength);
             default:
                 return null; // invalid shapetype or unhandled by this EsriFeatureFactory
