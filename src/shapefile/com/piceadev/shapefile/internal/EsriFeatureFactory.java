@@ -8,85 +8,96 @@ import com.piceadev.shapefile.internal.EsriPoint;
 import com.piceadev.shapefile.internal.EsriPolyline;
 import com.piceadev.shapefile.internal.EsriPolygon;
 import com.piceadev.shapefile.internal.EsriConstants;
-import com.piceadev.shapefile.internal.LittleEndianInputStream;
+import com.piceadev.shapefile.internal.EsriFileHandler;
 
 public class EsriFeatureFactory { 
 
     private final static Logger logger = Logger.getLogger ("com.piceadev.shapefile");
 
-    public static EsriFeature getFeature (LittleEndianInputStream leis) 
-        throws IOException {
+    public static EsriFeature getFeature (EsriFileHandler fileHandler) throws IOException {
+        if (! fileHandler instanceof ShpFileHandler) {
+            logger.log (Level.SEVERE , "Unexpected file handler. Expected type ShpFileHandler.");
+            return null; // not sure how I got here...
+        }
+
         // record header
-        int recordNumber = leis.readInt();
-        int recordLength = leis.readInt(); // in 16-bit words
+        int recordNumber = fileHandler.readInt();
+        int recordLength = fileHandler.readInt(); // in 16-bit words
 
         if (recordLength == -1) {
             return null; // end of file
         }
 
         // record content
-        int recordShapeType = leis.readLEInt(); // starts with shape type, which must be same as header or null
+        int recordShapeType = fileHandler.readLEInt(); // starts with shape type, which must be same as header or null
         //if (recordShapeType != 0 && recordShapeType != shapeType)
         //    throw Exception ("invalid shapefile");
 
-        int contentsLength = recordLength - 8 - 4; // 8 bytes for the header, 4 bytes for the shape type
-
+        EsriFeature feature = null;
         switch (recordShapeType) {
             case EsriConstants.POINT: // Point
                 logger.log (Level.FINE, String.format ("Feature %d is a Point feature of length %d", recordNumber, recordLength));
-                return getPointFeature (leis);
+                feature = getPointFeature (fileHandler);
+                break;
             case EsriConstants.POLYLINE: // Polyline
                 logger.log (Level.FINE, String.format ("Feature %d is a Polyline feature of length %d", recordNumber, recordLength));
-                return getPolylineFeature (leis, contentsLength);
+                int contentsLength = recordLength - 8 - 4; // 8 bytes for the header, 4 bytes for the shape type
+                feature = getPolylineFeature (fileHandler, contentsLength);
+                break;
             //case EsriConstants.POLYGON: // Polygon
-                //return getPolygonFeature (leis, contentsLength);
+                //return getPolygonFeature (fileHandler, contentsLength);
             default:
                 return null; // invalid shapetype or unhandled by this EsriFeatureFactory
         }
+
+        feature.setRecordNumber (recordNumber);
+        feature.setRecordLength (recordLength);
+        feature.setRecordShapeType (recordShapeType);
+
+        return feature;
     }
 
-    private static EsriPoint getPointFeature (LittleEndianInputStream leis) 
-        throws IOException {
+    private static EsriPoint getPointFeature (EsriFileHandler fileHandler) throws IOException {
         EsriPoint point = new EsriPoint();
 
-        point.setX (leis.readLEDouble());
-        point.setY (leis.readLEDouble());
+        point.setX (fileHandler.readLEDouble());
+        point.setY (fileHandler.readLEDouble());
 
         logger.log (Level.FINE, String.format ("Found Point with coords %f x %f", point.getX (), point.getY ()));
 
         return point;
     }
 
-    private static EsriPolyline getPolylineFeature (LittleEndianInputStream leis, int contentsLength) 
+    private static EsriPolyline getPolylineFeature (EsriFileHandler fileHandler, int contentsLength) 
         throws IOException {
         EsriPolyline line = new EsriPolyline();
 
-        /* double xMin = */leis.readLEDouble();
-        /* double yMin = */leis.readLEDouble();
-        /* double xMax = */leis.readLEDouble();
-        /* double yMax = */leis.readLEDouble();
-        int numParts = leis.readLEInt();
-        int numPoints = leis.readLEInt();
+        /* double xMin = */fileHandler.readLEDouble();
+        /* double yMin = */fileHandler.readLEDouble();
+        /* double xMax = */fileHandler.readLEDouble();
+        /* double yMax = */fileHandler.readLEDouble();
+        int numParts = fileHandler.readLEInt();
+        int numPoints = fileHandler.readLEInt();
 
         logger.log (Level.FINE, String.format ("Polyline feature has %d parts and %d total vertices", numParts, numPoints));
         line.setNumParts (numParts);
         line.setNumPoints (numPoints);
 
         for (int part = 0; part < numParts; part++) {
-            int index = leis.readLEInt();
+            int index = fileHandler.readLEInt();
             line.addPartIndex (part, index);
 
             logger.log (Level.FINE, String.format ("Part %d starts at vertex %d", part, index));
         }
 
         for (int point = 0; point < numPoints; point++) {
-            double x = leis.readLEDouble ();
-            double y = leis.readLEDouble ();
+            double x = fileHandler.readLEDouble ();
+            double y = fileHandler.readLEDouble ();
             line.addPoint (point, x, y);
 
             logger.log (Level.FINE, String.format ("Vertex %d coords %f x %f", point, x, y));
             // or, 
-            // line.addPoint (point, new EsriPoint (leis.readLEDouble (), leis.readLEDouble ())); // dbl X, dbl Y
+            // line.addPoint (point, new EsriPoint (fileHandler.readLEDouble (), fileHandler.readLEDouble ())); // dbl X, dbl Y
         }
 
         // if (line.validate ()) {} // check for repeat vertices and remove, and verify a non-zero length in each part

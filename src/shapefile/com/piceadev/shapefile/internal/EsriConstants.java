@@ -42,4 +42,17 @@ public class EsriConstants {
     public static final byte DBF_TYPE_OLE = (byte) 'G';
     public static final String DBF_OLE = "OLE";
     
+    public static final short HEADER_POS_FILE_CODE = 0;
+    public static final short HEADER_POS_FILE_LENGTH = 24;
+    public static final short HEADER_POS_VERSION = 28;
+    public static final short HEADER_POS_SHAPE_TYPE = 32;
+    public static final short HEADER_POS_X_MIN = 36;
+    public static final short HEADER_POS_Y_MIN = 44;
+    public static final short HEADER_POS_X_MAX = 52;
+    public static final short HEADER_POS_Y_MAX = 60;
+    public static final short HEADER_POS_Z_MIN = 68;
+    public static final short HEADER_POS_Z_MAX = 76;
+    public static final short HEADER_POS_M_MIN = 84;
+    public static final short HEADER_POS_M_MAX = 92;
+    public static final short HEADER_END = 100;
 }

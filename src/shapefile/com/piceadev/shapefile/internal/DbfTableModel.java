@@ -269,6 +269,23 @@ public class DbfTableModel extends AbstractTableModel
     }
 
     /**
+     * Creates a DbfTableModel based on an InputStream
+     * 
+     * @param filename The dbf file
+     */
+    public DbfTableModel(String filename) {
+        this();
+        DbfInputStream is = new DbfInputStream (filename);
+
+        _lengths = is.getLengths();
+        _decimalCounts = is.getDecimalCounts();
+        _names = is.getColumnNames();
+        _types = is.getTypes();
+        _records = is.getRecords();
+        _columnCount = is.getColumnCount();
+    }
+
+    /**
      * Adds a row of data to the the model
      * 
      * @param columns A collection of columns that comprise the row of data
