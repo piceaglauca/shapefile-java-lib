@@ -2,6 +2,7 @@ package com.piceadev.shapefile.internal;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.ArrayList;
 import java.io.File;
 import java.io.IOException;
 import java.io.EOFException;
@@ -25,9 +26,9 @@ public class ShpFileHandler extends EsriFileHandler {
         EsriFeature nextFeature = null;
 
         nextFeature = getNextFeature ();
-        while (feature != null) {
-            features.add (feature.getRecordNumber(), feature);
-            feature = getNextFeature ();
+        while (nextFeature != null) {
+            features.add (nextFeature);
+            nextFeature = getNextFeature ();
         }
 
         return features;

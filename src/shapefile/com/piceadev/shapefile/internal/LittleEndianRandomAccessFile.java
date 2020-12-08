@@ -28,6 +28,7 @@
 package com.piceadev.shapefile.internal;
 
 import java.io.RandomAccessFile;
+import java.io.FileNotFoundException;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.UTFDataFormatException;
@@ -40,12 +41,17 @@ import java.io.UTFDataFormatException;
  */
 public class LittleEndianRandomAccessFile extends RandomAccessFile {
 
+    // The output side of this file comes from LittleEndianOutputStream, which 
+    // extends DataOutputStream, which contains a field for number of bytes written.
+    // TODO: Not using currently, but maybe it's necessary.
+    //protected int written = 0;
+
     /**
      * Constructor
      * 
      * @param in An input stream that this is chained to.
      */
-    public LittleEndianRandomAccessFile(String filename) {
+    public LittleEndianRandomAccessFile(String filename) throws FileNotFoundException {
         super(filename, "rw");
     }
 
@@ -242,7 +248,7 @@ public class LittleEndianRandomAccessFile extends RandomAccessFile {
     public void writeLEShort(short s) throws IOException {
         write(s & 0xFF);
         write((s >>> 8) & 0xFF);
-        written += 2;
+        //written += 2;
     }
 
     /**
@@ -252,7 +258,7 @@ public class LittleEndianRandomAccessFile extends RandomAccessFile {
     public void writeLEChar(int c) throws IOException {
         write(c & 0xFF);
         write((c >>> 8) & 0xFF);
-        written += 2;
+        //written += 2;
     }
 
     /**
@@ -265,7 +271,7 @@ public class LittleEndianRandomAccessFile extends RandomAccessFile {
         write((i >>> 8) & 0xFF);
         write((i >>> 16) & 0xFF);
         write((i >>> 24) & 0xFF);
-        written += 4;
+        //written += 4;
     }
 
     /**
@@ -282,7 +288,7 @@ public class LittleEndianRandomAccessFile extends RandomAccessFile {
         write((int) (l >>> 40) & 0xFF);
         write((int) (l >>> 48) & 0xFF);
         write((int) (l >>> 56) & 0xFF);
-        written += 8;
+        //written += 8;
     }
 
     /**
@@ -315,7 +321,7 @@ public class LittleEndianRandomAccessFile extends RandomAccessFile {
             write(c & 0xFF);
             write((c >>> 8) & 0xFF);
         }
-        written += length * 2;
+        //written += length * 2;
     }
 
     public void writeLEUTF(String s) throws IOException {
@@ -344,13 +350,13 @@ public class LittleEndianRandomAccessFile extends RandomAccessFile {
                 write(0xE0 | ((c >> 12) & 0x0F));
                 write(0x80 | ((c >> 6) & 0x3F));
                 write(0x80 | (c & 0x3F));
-                written += 2;
+                //written += 2;
             } else {
                 write(0xC0 | ((c >> 6) & 0x1F));
                 write(0x80 | (c & 0x3F));
-                written += 1;
+                //written += 1;
             }
         }
-        written += numchars + 2;
+        //written += numchars + 2;
     }
 }

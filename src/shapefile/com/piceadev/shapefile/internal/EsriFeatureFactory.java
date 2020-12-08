@@ -15,7 +15,7 @@ public class EsriFeatureFactory {
     private final static Logger logger = Logger.getLogger ("com.piceadev.shapefile");
 
     public static EsriFeature getFeature (EsriFileHandler fileHandler) throws IOException {
-        if (! fileHandler instanceof ShpFileHandler) {
+        if (! (fileHandler instanceof ShpFileHandler)) {
             logger.log (Level.SEVERE , "Unexpected file handler. Expected type ShpFileHandler.");
             return null; // not sure how I got here...
         }

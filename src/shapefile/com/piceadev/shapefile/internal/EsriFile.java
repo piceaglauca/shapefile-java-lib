@@ -1,18 +1,24 @@
 package com.piceadev.shapefile.internal;
 
+import java.io.IOException;
+
 public class EsriFile {
-    private EsriFileHandler fileHandler;
+    protected EsriFileHandler fileHandler;
 
-    private int fileCode;
-    private int fileLength;
-    private int version;
-    private int shapeType;
-    private double xMin, xMax;
-    private double yMin, yMax;
-    private double zMin, zMax;
-    private double mMin, mMax;
+    protected int fileCode;
+    protected int fileLength;
+    protected int version;
+    protected int shapeType;
+    protected double xMin, xMax;
+    protected double yMin, yMax;
+    protected double zMin, zMax;
+    protected double mMin, mMax;
 
-    private void getHeaderInfo () {
+    protected void setFileHandler (EsriFileHandler fileHandler) {
+        this.fileHandler = fileHandler;
+    }
+
+    protected void getHeaderInfo () throws IOException {
         this.fileCode = fileHandler.getFileCode ();
         this.fileLength = fileHandler.getFileLength ();
         this.version = fileHandler.getVersion ();
@@ -27,43 +33,43 @@ public class EsriFile {
         this.mMax = fileHandler.getMMax ();
     }
 
-    public int getFileLength () {
+    public int getFileLength () throws IOException {
         return fileLength;
     }
 
-    public int getShapeType () {
+    public int getShapeType () throws IOException {
         return shapeType;
     }
 
-    public double getXMin () {
+    public double getXMin () throws IOException {
         return xMin;
     }
 
-    public double getXMax () {
+    public double getXMax () throws IOException {
         return xMax;
     }
 
-    public double getYMin () {
+    public double getYMin () throws IOException {
         return yMin;
     }
 
-    public double getYMax () {
+    public double getYMax () throws IOException {
         return yMax;
     }
 
-    public double getZMin () {
+    public double getZMin () throws IOException {
         return zMin;
     }
 
-    public double getZMax () {
+    public double getZMax () throws IOException {
         return zMax;
     }
 
-    public double getMMin () {
+    public double getMMin () throws IOException {
         return mMin;
     }
 
-    public double getMMax () {
+    public double getMMax () throws IOException {
         return mMax;
     }
 }

@@ -4,20 +4,24 @@ JC = javac
 JVM = java
 .SUFFIXES: .java .class
 .java.class:
-	$(JC) $(JFLAGS) internal/*.java $*.java
+	$(JC) $(JFLAGS) $(CLASSES)
 
 CLASSES = \
-	ShapefileReader.java \
-	internal/EsriFeatureFactory.java \
+	EsriFileManager.java \
+	EsriTester.java \
+	internal/EsriConstants.java \
 	internal/EsriFeature.java \
+	internal/EsriFeatureFactory.java \
+	internal/EsriFile.java \
+	internal/EsriFileHandler.java \
+	internal/EsriIndex.java \
 	internal/EsriPoint.java \
 	internal/EsriPolyline.java \
-	internal/EsriConstants.java \
-	internal/LittleEndianInputStream.java \
+	internal/LittleEndianRandomAccessFile.java \
 	internal/Shapefile.java \
-	internal/ShpInputStream.java \
-	internal/DbfInputStream.java \
-	internal/DbfTableModel.java
+	internal/ShpFileHandler.java \
+	internal/ShxFile.java \
+	internal/ShxFileHandler.java
 
 default: classes
 
@@ -27,5 +31,5 @@ clean:
 	$(RM) *.class internal/*.class
 
 test:
-	$(JVM) -cp $(CLASSPATH) com.piceadev.shapefile.ShapefileReader /home/scott/piceadev/shapefile-java-lib/src/shapefile/com/piceadev/shapefile/testing/testdata/test-point.shp
-	$(JVM) -cp $(CLASSPATH) com.piceadev.shapefile.ShapefileReader /home/scott/piceadev/shapefile-java-lib/src/shapefile/com/piceadev/shapefile/testing/testdata/test-polyline.shp
+	$(JVM) -cp $(CLASSPATH) com.piceadev.shapefile.EsriTester /home/scott/piceadev/shapefile-java-lib/src/shapefile/com/piceadev/shapefile/testing/testdata/test-point.shp
+	$(JVM) -cp $(CLASSPATH) com.piceadev.shapefile.EsriTester /home/scott/piceadev/shapefile-java-lib/src/shapefile/com/piceadev/shapefile/testing/testdata/test-polyline.shp

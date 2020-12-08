@@ -5,6 +5,18 @@ public class EsriIndex extends EsriFile {
     private int offset;
     private int contentLength;
 
+    public int getRecordNumber () {
+        return recordNumber;
+    }
+
+    public int getOffset () {
+        return offset;
+    }
+
+    public int getContentLength () {
+        return contentLength;
+    }
+
     public void setRecordNumber (int recordNumber) {
         this.recordNumber = recordNumber;
     }
