@@ -116,7 +116,7 @@ public class DbfTableModel extends AbstractTableModel
      * When data is changed in a field, the block numbers may also change and
      * the number in the .DBF may be changed to reflect the new location.
      */
-    public static Logger logger = Logger.getLogger("com.bbn.openmap.dataAccess.shape.DbfTableModel");
+    public static Logger logger = Logger.getLogger("com.piceadev.shapefile");
 
     private static final long serialVersionUID = 1L;
     /**
@@ -193,7 +193,7 @@ public class DbfTableModel extends AbstractTableModel
      * Old Object value held for every NUMERIC cell that had a problem
      * importing. Now, those cells are filled with whitespace.
      */
-    public final static Double ZERO = new Double(0);
+    public final static Double ZERO = Double.valueOf(0);
 
     /**
      * An array of bytes that contain the character lengths for each column
@@ -273,16 +273,8 @@ public class DbfTableModel extends AbstractTableModel
      * 
      * @param filename The dbf file
      */
-    public DbfTableModel(String filename) {
-        this();
-        DbfInputStream is = new DbfInputStream (filename);
-
-        _lengths = is.getLengths();
-        _decimalCounts = is.getDecimalCounts();
-        _names = is.getColumnNames();
-        _types = is.getTypes();
-        _records = is.getRecords();
-        _columnCount = is.getColumnCount();
+    public DbfTableModel(String filename) throws IOException {
+        this (new DbfInputStream (filename));
     }
 
     /**
@@ -323,9 +315,9 @@ public class DbfTableModel extends AbstractTableModel
     public Object getEmptyDefaultForType(byte type) {
         // May need to be updated to provide real values.
         if (isNumericalType(type)) {
-            return new Double(0);
+            return Double.valueOf(0);
         } else if (type == EsriConstants.DBF_TYPE_LOGICAL) {
-            return new Boolean(false);
+            return Boolean.valueOf(false);
         } else {
             return "";
         }
@@ -903,7 +895,6 @@ public class DbfTableModel extends AbstractTableModel
      * 
      * @param dbf The url of the file to retrieve.
      * @return The DbfTableModel, null if there is a problem.
-     */
     public static DbfTableModel getDbfTableModel(URL dbf) {
         try {
             return read(dbf);
@@ -914,12 +905,15 @@ public class DbfTableModel extends AbstractTableModel
             return null;
         }
     }
+     */
 
-    public static DbfTableModel read(URL dbf)
+    //public static DbfTableModel read(URL dbf)
+    public static DbfTableModel read(String filename)
             throws Exception {
-        InputStream is = dbf.openStream();
-        DbfTableModel model = new DbfTableModel(new DbfInputStream(is));
-        is.close();
+        //InputStream is = dbf.openStream();
+        //DbfTableModel model = new DbfTableModel(new DbfInputStream(is));
+        DbfTableModel model = new DbfTableModel(filename);
+        //is.close();
         return model;
     }
 
@@ -936,8 +930,10 @@ public class DbfTableModel extends AbstractTableModel
             */
         }
         if (location != null) {
-            DbfOutputStream dos = new DbfOutputStream(new FileOutputStream(new File(location)));
+            //DbfOutputStream dos = new DbfOutputStream(new FileOutputStream(new File(location)));
+            DbfOutputStream dos = new DbfOutputStream(location);
             dos.writeModel(model);
+            dos.close();
         }
 
         return location;
@@ -1013,10 +1009,10 @@ public class DbfTableModel extends AbstractTableModel
         if (isNumericalType((byte) type)) {
             if (cellContents.length() > 0) {
                 try {
-                    ret = new Double(cellContents);
+                    ret = Double.parseDouble(cellContents);
                 } catch (NumberFormatException nfe) {
                     // Shouldn't get here, but thought it might help. DFD
-                    ret = new Double(df.parse(cellContents).doubleValue());
+                    ret = (double) df.parse(cellContents).doubleValue();
                 }
             } else {
                 // If we come across a numerical cell that doesn't contain data,
@@ -1094,7 +1090,7 @@ public class DbfTableModel extends AbstractTableModel
 
         ArrayList<Object> record = new ArrayList<Object>();
         record.add("ok");
-        record.add(new Double(345.3));
+        record.add((double) 345.3);
         dtm.addRecord(record);
 
         record = new ArrayList<Object>();
@@ -1109,13 +1105,14 @@ public class DbfTableModel extends AbstractTableModel
 
         record = new ArrayList<Object>();
         record.add("zero");
-        record.add(new Double(0));
+        record.add((double) 0);
         dtm.addRecord(record);
 
         try {
             write(dtm, "./test.dbf");
 
-            dtm = read(new File("./test.dbf").toURI().toURL());
+            //dtm = read(new File("./test.dbf").toURI().toURL());
+            dtm = read("./test.dbf");
 
             //dtm.showGUI("test.dbf", MODIFY_ROW_MASK | MODIFY_COLUMN_MASK | SAVE_MASK);
 
