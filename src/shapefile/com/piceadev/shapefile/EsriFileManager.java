@@ -1,4 +1,4 @@
-package com.piceadev.shapefile.internal;
+package com.piceadev.shapefile;
 
 import org.apache.commons.io.FilenameUtils;
 import com.piceadev.shapefile.internal.Shapefile;
