@@ -22,18 +22,10 @@
 
 package com.piceadev.shapefile.internal;
 
-//import java.awt.BorderLayout;
-//import java.awt.Component;
-//import java.awt.event.ActionEvent;
-//import java.awt.event.ActionListener;
-//import java.awt.event.WindowAdapter;
-//import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -42,32 +34,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import javax.swing.BorderFactory;
-//import javax.swing.DefaultListSelectionModel;
-//import javax.swing.JButton;
-//import javax.swing.JFrame;
-//import javax.swing.JLabel;
-//import javax.swing.JOptionPane;
-//import javax.swing.JPanel;
-//import javax.swing.JScrollPane;
-//import javax.swing.JTable;
-//import javax.swing.ListSelectionModel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-//import javax.swing.table.DefaultTableCellRenderer;
-//import javax.swing.table.TableCellRenderer;
 
-//import com.bbn.openmap.Environment;
-//import com.bbn.openmap.I18n;
 import com.piceadev.shapefile.internal.DbfInputStream;
 import com.piceadev.shapefile.internal.DbfOutputStream;
-//import com.bbn.openmap.omGraphics.OMAction;
-//import com.bbn.openmap.omGraphics.OMGraphic;
-//import com.bbn.openmap.omGraphics.OMGraphicList;
-//import com.bbn.openmap.util.Debug;
-//import com.bbn.openmap.util.FileUtils;
-//import com.bbn.openmap.util.PropUtils;
 
 /**
  * An implementation of TableModel that manages tabular data read from a dbf
@@ -118,83 +90,6 @@ public class DbfTableModel extends AbstractTableModel
      */
     public static Logger logger = Logger.getLogger("com.piceadev.shapefile");
 
-    private static final long serialVersionUID = 1L;
-    /**
-     * 10 digits representing a .DBT block number. The number is stored as a
-     * string, right justified and padded with blanks.
-     */
-    //public static final byte TYPE_BINARY = 'B';
-    /**
-     * All OEM code page characters - padded with blanks to the width of the
-     * field.
-     */
-    //public static final byte TYPE_CHARACTER = 'C';
-    /** 8 bytes - date stored as a string in the format YYYYMMDD. */
-    //public static final byte TYPE_DATE = 'D';
-    /**
-     * Number stored as a string, right justified, and padded with blanks to the
-     * width of the field.
-     */
-    //public static final byte TYPE_NUMERIC = 'N';
-    /** 1 byte - initialized to 0x20 (space) otherwise T or F. */
-    //public static final byte TYPE_LOGICAL = 'L';
-    /**
-     * 10 digits (bytes) representing a .DBT block number. The number is stored
-     * as a string, right justified and padded with blanks.
-     */
-    //public static final byte TYPE_MEMO = 'M';
-    /**
-     * 8 bytes - two longs, first for date, second for time. The date is the
-     * number of days since 01/01/4713 BC. Time is hours * 3600000L + minutes *
-     * 60000L + Seconds * 1000L
-     */
-    //public static final byte TYPE_TIMESTAMP = '@';
-    /** 4 bytes. Leftmost bit used to indicate sign, 0 negative. */
-    //public static final byte TYPE_LONG = 'I';
-    /** Same as a Long */
-    //public static final byte TYPE_AUTOINCREMENT = '+';
-    /**
-     * Number stored as a string, right justified, and padded with blanks to the
-     * width of the field.
-     */
-    //public static final byte TYPE_FLOAT = 'F';
-    /** 8 bytes - no conversions, stored as a double. */
-    //public static final byte TYPE_DOUBLE = 'O';
-    /**
-     * 10 digits (bytes) representing a .DBT block number. The number is stored
-     * as a string, right justified and padded with blanks.
-     */
-    //public static final byte TYPE_OLE = 'G';
-
-    /**
-     * Edit button mask, to allow adding/removing rows. Be very careful with
-     * this option if you plan on using this file with a shape file - the number
-     * of records has to match the number of graphics in a shape file, so if you
-     * add or delete, you should add/delete the graphic in the shape file, too.
-     */
-    public static final int MODIFY_ROW_MASK = 1 << 0;
-    /**
-     * Edit button mask, to allow adding/removing columns in the attribute
-     * table.
-     */
-    public static final int MODIFY_COLUMN_MASK = 1 << 1;
-    /**
-     * Button mask to drop the frame quietly, with the modifications to the
-     * table complete.
-     */
-    public static final int DONE_MASK = 1 << 3;
-
-    /**
-     * Button mask to show a save button to write out any changes.
-     */
-    public static final int SAVE_MASK = 1 << 4;
-
-    /**
-     * Old Object value held for every NUMERIC cell that had a problem
-     * importing. Now, those cells are filled with whitespace.
-     */
-    public final static Double ZERO = Double.valueOf(0);
-
     /**
      * An array of bytes that contain the character lengths for each column
      */
@@ -206,13 +101,19 @@ public class DbfTableModel extends AbstractTableModel
      */
     protected byte[] _decimalCounts = null;
 
-    /** An array of bytes that contain the column types for each column */
+    /** 
+     * An array of bytes that contain the column types for each column 
+     */
     protected byte[] _types = null;
 
-    /** An array of bytes that contain the names for each column */
+    /** 
+     * An array of bytes that contain the names for each column 
+     */
     protected String[] _names = null;
 
-    /** Class scope reference to a list of data formatted by row */
+    /** 
+     * Class scope reference to a list of data formatted by row 
+     */
     protected List<List<Object>> _records = null;
 
     /**
@@ -221,9 +122,6 @@ public class DbfTableModel extends AbstractTableModel
     protected int _columnCount = -1;
 
     protected boolean writable = false;
-
-    //protected JTable table;
-    protected final DbfTableModel parent;
 
     protected boolean dirty = false;
     protected boolean exitOnClose = false;
@@ -234,7 +132,6 @@ public class DbfTableModel extends AbstractTableModel
     //static I18n i18n = Environment.getI18n();
 
     protected DbfTableModel() {
-        parent = this;
         DEBUG = logger.isLoggable(Level.FINE);
     }
 
@@ -324,15 +221,25 @@ public class DbfTableModel extends AbstractTableModel
     }
 
     public static boolean isNumericalType(byte type) {
-        return type == EsriConstants.DBF_TYPE_NUMERIC || type == EsriConstants.DBF_TYPE_LONG || type == EsriConstants.DBF_TYPE_FLOAT
-                || type == EsriConstants.DBF_TYPE_DOUBLE || type == EsriConstants.DBF_TYPE_AUTOINCREMENT;
+        return type == EsriConstants.DBF_TYPE_NUMERIC 
+                || type == EsriConstants.DBF_TYPE_LONG 
+                || type == EsriConstants.DBF_TYPE_FLOAT
+                || type == EsriConstants.DBF_TYPE_DOUBLE 
+                || type == EsriConstants.DBF_TYPE_AUTOINCREMENT;
     }
 
     public static boolean isValidType(byte type) {
-        return type == EsriConstants.DBF_TYPE_NUMERIC || type == EsriConstants.DBF_TYPE_LONG || type == EsriConstants.DBF_TYPE_FLOAT
-                || type == EsriConstants.DBF_TYPE_DOUBLE || type == EsriConstants.DBF_TYPE_BINARY || type == EsriConstants.DBF_TYPE_CHARACTER
-                || type == EsriConstants.DBF_TYPE_DATE || type == EsriConstants.DBF_TYPE_LOGICAL || type == EsriConstants.DBF_TYPE_MEMO
-                || type == EsriConstants.DBF_TYPE_TIMESTAMP || type == EsriConstants.DBF_TYPE_AUTOINCREMENT
+        return type == EsriConstants.DBF_TYPE_NUMERIC 
+                || type == EsriConstants.DBF_TYPE_LONG 
+                || type == EsriConstants.DBF_TYPE_FLOAT
+                || type == EsriConstants.DBF_TYPE_DOUBLE 
+                || type == EsriConstants.DBF_TYPE_BINARY 
+                || type == EsriConstants.DBF_TYPE_CHARACTER
+                || type == EsriConstants.DBF_TYPE_DATE 
+                || type == EsriConstants.DBF_TYPE_LOGICAL 
+                || type == EsriConstants.DBF_TYPE_MEMO
+                || type == EsriConstants.DBF_TYPE_TIMESTAMP 
+                || type == EsriConstants.DBF_TYPE_AUTOINCREMENT
                 || type == EsriConstants.DBF_TYPE_OLE;
     }
 
@@ -528,177 +435,6 @@ public class DbfTableModel extends AbstractTableModel
         return writable;
     }
 
-    /**
-     * Needs to be called before displaying the DbfTableModel.
-     */
-    /*
-    public JTable getTable(ListSelectionModel lsm) {
-        JTable t = getTable();
-        t.setModel(this);
-        t.setSelectionModel(lsm);
-        t.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-        return t;
-    }
-    */
-
-    /*
-    protected JTable getTable() {
-        if (table == null) {
-            table = new DbfJTable(this);
-        }
-        return table;
-    }
-    */
-
-    // In case you want to add options to modify the table.
-    //JPanel controlPanel = null;
-
-    /*
-    public Component getGUI(String filename, int actionMask) {
-
-        JPanel panel = new JPanel();
-
-        if (filename != null) {
-            panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), filename));
-        } else {
-            panel.setBorder(BorderFactory.createEtchedBorder());
-        }
-
-        panel.setLayout(new BorderLayout());
-
-        JScrollPane pane = new JScrollPane(getTable(new DefaultListSelectionModel()));
-        panel.add(pane, BorderLayout.CENTER);
-
-        controlPanel = new JPanel();
-        panel.add(controlPanel, BorderLayout.SOUTH);
-
-        if ((actionMask & MODIFY_ROW_MASK) != 0) {
-            JButton addButton = new JButton(i18n.get(DbfTableModel.class, "Add", "Add"));
-            addButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    addBlankRecord();
-                    fireTableDataChanged();
-                }
-            });
-
-            JButton deleteButton = new JButton(i18n.get(DbfTableModel.class, "Delete", "Delete"));
-            deleteButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    int[] index = getTable().getSelectedRows();
-
-                    if (index.length > 0) {
-
-                        // Ask to make sure...
-
-                        int check =
-                                JOptionPane.showConfirmDialog(null,
-                                                              (i18n.get(DbfTableModel.class, "Are_you_sure_you_want_to_delete",
-                                                                        "Are you sure you want to delete") + " " + (index.length > 1
-                                                                      ? i18n.get(DbfTableModel.class, "these_rows", "these rows?")
-                                                                      : i18n.get(DbfTableModel.class, "this_row", "this row?"))),
-                                                              i18n.get(DbfTableModel.class, "Confirm_Delete", "Confirm Delete"),
-                                                              JOptionPane.OK_CANCEL_OPTION);
-
-                        if (check == JOptionPane.YES_OPTION) {
-
-                            for (int i = index.length - 1; i >= 0; i--) {
-                                if (DEBUG)
-                                    logger.fine("Deleting record " + index[i]);
-                                List<Object> removed = remove(index[i]);
-                                if (DEBUG)
-                                    logger.fine("Deleted records: " + removed);
-                            }
-                            fireTableDataChanged();
-                        }
-                    }
-                }
-            });
-
-            controlPanel.add(addButton);
-            controlPanel.add(deleteButton);
-        }
-
-        if ((actionMask & MODIFY_COLUMN_MASK) != 0) {
-            JButton editTableButton = new JButton(i18n.get(DbfTableModel.class, "Edit_Table_Format", "Edit Table Format"));
-            editTableButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    MetaDbfTableModel mdtm = new MetaDbfTableModel(parent);
-                    mdtm.addTableModelListener(parent);
-                    mdtm.showGUI(filePath.toString());
-                }
-            });
-
-            controlPanel.add(editTableButton);
-        }
-
-        if ((actionMask & SAVE_MASK) != 0) {
-            JButton saveButton = new JButton(i18n.get(DbfTableModel.class, "Save", "Save"));
-            saveButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    try {
-                        write(parent, null);
-                    } catch (FileNotFoundException fnfe) {
-                    } catch (IOException ioe) {
-                    }
-                }
-            });
-            controlPanel.add(saveButton);
-        }
-
-        if ((actionMask & DONE_MASK) != 0) {
-            JButton doneButton = new JButton(i18n.get(DbfTableModel.class, "Done", "Done"));
-            doneButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    frame.dispose();
-                }
-            });
-            controlPanel.add(doneButton);
-        }
-
-        return panel;
-    }
-    */
-
-    protected final StringBuffer filePath = new StringBuffer();
-    //protected JFrame frame = null;
-
-    /*
-    public void hideGUI() {
-        if (frame != null) {
-            frame.setVisible(false);
-        }
-    }
-
-    public void showGUI(String filename, int actionMask) {
-
-        if (frame == null) {
-            frame = new JFrame(filename);
-
-            filePath.replace(0, filePath.capacity(), filename);
-
-            frame.getContentPane().add(getGUI(null, actionMask), BorderLayout.CENTER);
-
-            frame.setSize(400, 300);
-            frame.addWindowListener(new WindowAdapter() {
-                public void windowClosing(WindowEvent e) {
-                    // need a shutdown event to notify other gui beans
-                    // and
-                    // then exit.
-                    exitWindowClosed();
-                }
-            });
-        }
-
-        frame.setVisible(true);
-    }
-
-    public void exitWindowClosed() {
-        if (exitOnClose) {
-            System.exit(0);
-        }
-    }
-    */
-
     public void tableChanged(TableModelEvent e) {
         dirty = true;
         if (DEBUG)
@@ -890,30 +626,9 @@ public class DbfTableModel extends AbstractTableModel
         return dtm;
     }
 
-    /**
-     * Creates a DbfTableModel for a given .dbf file
-     * 
-     * @param dbf The url of the file to retrieve.
-     * @return The DbfTableModel, null if there is a problem.
-    public static DbfTableModel getDbfTableModel(URL dbf) {
-        try {
-            return read(dbf);
-        } catch (Exception exception) {
-            if (logger.isLoggable(Level.FINE)) {
-                logger.warning("problem loading DBF file" + exception.getMessage());
-            }
-            return null;
-        }
-    }
-     */
-
-    //public static DbfTableModel read(URL dbf)
     public static DbfTableModel read(String filename)
             throws Exception {
-        //InputStream is = dbf.openStream();
-        //DbfTableModel model = new DbfTableModel(new DbfInputStream(is));
         DbfTableModel model = new DbfTableModel(filename);
-        //is.close();
         return model;
     }
 
@@ -922,15 +637,8 @@ public class DbfTableModel extends AbstractTableModel
         if (location == null) {
 
             throw new IOException ("File path not specified.");
-            /*
-            location = FileUtils.getFilePathToSaveFromUser(i18n.get(DbfTableModel.class, "Select_DBF_Name", "Select DBF file name..."));
-            if (location != null && !location.endsWith(".dbf")) {
-                location = location + ".dbf";
-            }
-            */
         }
         if (location != null) {
-            //DbfOutputStream dos = new DbfOutputStream(new FileOutputStream(new File(location)));
             DbfOutputStream dos = new DbfOutputStream(location);
             dos.writeModel(model);
             dos.close();
@@ -1049,31 +757,6 @@ public class DbfTableModel extends AbstractTableModel
         this.exitOnClose = exitOnClose;
     }
 
-    /*
-    public static void main(String[] args) {
-        //Debug.init();
-        if (args.length < 1) {
-            test();
-        } else {
-
-            try {
-
-                URL dbf = PropUtils.getResourceOrFileOrURL(args[0]);
-                InputStream is = dbf.openStream();
-                DbfInputStream dis = new DbfInputStream(is);
-                DbfTableModel dtm = new DbfTableModel(dis);
-                dtm.setWritable(true);
-                dtm.exitOnClose = true;
-                dtm.showGUI(args[0], MODIFY_ROW_MASK | MODIFY_COLUMN_MASK | SAVE_MASK);
-                is.close();
-            } catch (Exception e) {
-                //Debug.error(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-    }
-    */
-
     public static void test() {
         DbfTableModel dtm = new DbfTableModel(2);
         dtm.setColumnName(0, "NAME");
@@ -1129,51 +812,6 @@ public class DbfTableModel extends AbstractTableModel
 
     }
 
-    /*
-    class DbfJTable
-            extends JTable {
-        private static final long serialVersionUID = 1L;
-        DbfTableModel dbfTableModel;
-        DoubleRenderer dRenderer = new DoubleRenderer();
-
-        public DbfJTable(DbfTableModel model) {
-            super(model);
-            dbfTableModel = model;
-        }
-
-        public TableCellRenderer getCellRenderer(int row, int column) {
-            if (isNumericalType(_types[column])) {
-                dRenderer.formatter.setMaximumFractionDigits(_decimalCounts[column]);
-                return dRenderer;
-            }
-            return super.getCellRenderer(row, column);
-        }
-    }
-    */
-
-    /*
-    static class DoubleRenderer
-            extends DefaultTableCellRenderer {
-        private static final long serialVersionUID = 1L;
-        NumberFormat formatter = NumberFormat.getInstance();
-
-        public DoubleRenderer() {
-            super();
-            setHorizontalAlignment(JLabel.RIGHT);
-        }
-
-        public void setValue(Object value) {
-            try {
-                setText(formatter.format(value));
-                return;
-            } catch (Exception e) {
-
-            }
-            setText("");
-        }
-    }
-    */
-
     public boolean matches(DbfTableModel dbf) {
         boolean columnsMatch = false;
 
@@ -1198,60 +836,4 @@ public class DbfTableModel extends AbstractTableModel
             }
         }
     }
-
-    /**
-     * 
-     */
-    /*
-    @SuppressWarnings("unchecked")
-    public void doAction(OMGraphicList list, OMGraphic graphic, OMAction action, DbfTableModelFactory dbfFactory) {
-
-        if (list == null || graphic == null) {
-            return;
-        }
-
-        if (list.size() != getRowCount()) {
-            logger.warning("DBF rows don't match list contents");
-            return;
-        }
-
-        // Take the contents (rows) of the DbfTableModel, store them in the
-        // OMGraphics, do the action on the list, then reset the DbfTableModel.
-        // Reset the indexes in the OMGraphics.
-        int indexCount = 0;
-        for (OMGraphic omg : list) {
-            Integer index = (Integer) omg.getAttribute(ShapeConstants.SHAPE_INDEX_ATTRIBUTE);
-            if (index != null) {
-                if (index != indexCount) {
-                    // ooh jeez.
-                    logger.warning("the indexes in the list are off, (counted) " + indexCount + " vs (record) " + index);
-                }
-                omg.putAttribute(SHAPE_DBF_INFO_ATTRIBUTE, getRecord(index));
-            } else {
-                omg.putAttribute(SHAPE_DBF_INFO_ATTRIBUTE, getRecord(indexCount));
-            }
-            indexCount++;
-        }
-
-        if (graphic.getAttribute(SHAPE_DBF_INFO_ATTRIBUTE) == null) {
-
-            if (dbfFactory != null) {
-                graphic.putAttribute(SHAPE_DBF_INFO_ATTRIBUTE, dbfFactory.getNewDefaultRow());
-            } else {
-                graphic.putAttribute(SHAPE_DBF_INFO_ATTRIBUTE, getBlankRecord());
-            }
-        }
-
-        list.doAction(graphic, action);
-
-        _records.clear();
-
-        indexCount = 0;
-        for (OMGraphic omg : list) {
-            _records.add((List<Object>) omg.getAttribute(SHAPE_DBF_INFO_ATTRIBUTE));
-            omg.putAttribute(SHAPE_DBF_INFO_ATTRIBUTE, null);
-            omg.putAttribute(SHAPE_INDEX_ATTRIBUTE, new Integer(indexCount++));
-        }
-    }
-    */
 }

@@ -8,6 +8,14 @@ import com.piceadev.shapefile.internal.Shapefile;
 import com.piceadev.shapefile.internal.DbfTableModel;
 import com.piceadev.shapefile.internal.ShxFile;
 
+/**
+ * Read and write to ESRI Shapefiles. Shapefiles consist of at least three 
+ * files: .shp, .shx, .dbf, each with the same basename. See ESRI documentation
+ * for file specifications.
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
 public class EsriFileManager {
 
     private final static Logger logger = Logger.getLogger ("com.piceadev.shapefile");
@@ -16,6 +24,12 @@ public class EsriFileManager {
     private DbfTableModel dbf;
     private ShxFile shx;
 
+    /**
+     * Constructor.
+     *
+     * @param filename  Filename of the shapefile. Can include a file extension;
+     *                  this manager will handle all three mandatory files.
+     */
     public EsriFileManager (String filename) throws IOException {
         // if String filename contains file extension .shp, remove it
         String basename = filename;

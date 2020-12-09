@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.io.IOException;
 import com.piceadev.shapefile.internal.EsriFeature;
 
+/**
+ * Class to manage ESRI SHP data.
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
 public class Shapefile extends EsriFile {
 
     private final static Logger logger = Logger.getLogger ("com.piceadev.shapefile");
@@ -14,6 +20,11 @@ public class Shapefile extends EsriFile {
 
     protected ShpFileHandler fileHandler;
 
+    /**
+     * Constructor.
+     *
+     * @param   filename    File to use. Assumed to have .shp extension.
+     */
     // TODO: what if it's a new file? 
     public Shapefile (String filename) throws IOException {
         this.filename = filename;

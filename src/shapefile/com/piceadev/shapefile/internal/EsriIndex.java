@@ -1,6 +1,12 @@
 package com.piceadev.shapefile.internal;
 
-public class EsriIndex extends EsriFile {
+/**
+ * Class to represent a record in the shape index file (SHX).
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
+public class EsriIndex {
     private int recordNumber;
     private int offset;
     private int contentLength;

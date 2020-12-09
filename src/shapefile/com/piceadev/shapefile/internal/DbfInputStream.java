@@ -22,10 +22,7 @@
 
 package com.piceadev.shapefile.internal;
 
-//import java.io.BufferedInputStream;
 import java.io.IOException;
-//import java.io.InputStream;
-//import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -36,7 +33,6 @@ import java.util.logging.Logger;
 
 import com.piceadev.shapefile.internal.DbfTableModel;
 import com.piceadev.shapefile.internal.LittleEndianRandomAccessFile;
-//import com.bbn.openmap.util.Debug;
 
 /**
  * Reads the contents of a DBF file and provides access to what it has read
@@ -91,22 +87,12 @@ public class DbfInputStream {
     private List<List<Object>> _records = null;
 
     /**
-     * Creates a LittleEndianInputStream then uses it to read the contents of the
-     * DBF file
-     * 
-     * @param is An InputStream used to create a LittleEndianInputStream
-    public DbfInputStream(InputStream is) throws IOException {
-        BufferedInputStream bis = new BufferedInputStream(is);
-        _fileHandler = new LittleEndianInputStream(bis);
-        readHeader();
-        readFieldDescripters();
-        readData();
-    }
+     * Creates a LittleEndianRandomAccessFile then uses it to read the contents
+     * of the DBF file.
+     *
+     * @param filename  Filename of the DBF file.
      */
-
     public DbfInputStream (String filename) throws IOException {
-        //this (new FileInputStream(filename));
-        //BufferedInputStream bis = new BufferedInputStream (fis);
         _fileHandler = new LittleEndianRandomAccessFile(filename);
         readHeader();
         readFieldDescripters ();
@@ -255,9 +241,6 @@ public class DbfInputStream {
                     try {
                         record.add(c, DbfTableModel.getObjectForType(cell, type, df, length));
                     } catch (ParseException pe) {
-                        //if (Debug.debugging("shape")) {
-                        //   Debug.error("DbfInputStream:  error parsing column " + c + ", row " + r + ", expected number and got " + cell);
-                        //}
                         record.add(c, DbfTableModel.appendWhitespaceOrTrim(null, length));
                     }
                 }

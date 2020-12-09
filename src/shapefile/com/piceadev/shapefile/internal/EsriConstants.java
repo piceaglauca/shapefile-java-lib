@@ -1,7 +1,16 @@
 package com.piceadev.shapefile.internal;
 
+/**
+ * Constants defined for ESRI Shapefiles.
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
 public class EsriConstants {
 
+    /**
+     * ESRI Shape types. All records in a shapefile must be of a consistent type.
+     */
     public static final int NULL_SHAPE = 0;
     public static final int POINT = 1;
     public static final int POLYLINE = 3;
@@ -17,6 +26,9 @@ public class EsriConstants {
     public static final int MULTIPOINTM = 28;
     public static final int MULTI_PATCH = 31;
 
+    /**
+     * DBF Types. Character identifiers and String tags.
+     */
     public static final byte DBF_TYPE_BINARY = (byte) 'B';
     public static final String DBF_BINARY = "binary";
     public static final byte DBF_TYPE_CHARACTER = (byte) 'C';
@@ -42,6 +54,9 @@ public class EsriConstants {
     public static final byte DBF_TYPE_OLE = (byte) 'G';
     public static final String DBF_OLE = "OLE";
     
+    /** 
+     * Field byte locations in a SHP/SHX file header.
+     */
     public static final short HEADER_POS_FILE_CODE = 0;
     public static final short HEADER_POS_FILE_LENGTH = 24;
     public static final short HEADER_POS_VERSION = 28;

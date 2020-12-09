@@ -1,29 +1,31 @@
-// **********************************************************************
-// 
-// Adapted from BBN Technologies: com.bbn.openmap.dataAccess.shape.input.LittleEndianInputStream
-//                            and com.bbn.openmap.dataAccess.shape.input.LittleEndianOutputStream
-//
-// <copyright>
-// 
-//  BBN Technologies
-//  10 Moulton Street
-//  Cambridge, MA 02138
-//  (617) 873-8000
-// 
-//  Copyright (C) BBNT Solutions LLC. All rights reserved.
-// 
-// </copyright>
-// **********************************************************************
-// 
-// $Source: /cvs/distapps/openmap/src/openmap/com/bbn/openmap/dataAccess/shape/input/LittleEndianInputStream.java,v $
-// $Source: /cvs/distapps/openmap/src/openmap/com/bbn/openmap/dataAccess/shape/input/LittleEndianOutputStream.java,v $
-// $RCSfile: LittleEndianInputStream.java,v $
-// $RCSfile: LittleEndianOutputStream.java,v $
-// $Revision: 1.6 $
-// $Date: 2006/08/25 15:36:15 $
-// $Author: dietrick $
-// 
-// **********************************************************************
+/** 
+ * 
+ * Adapted from BBN Technologies: com.bbn.openmap.dataAccess.shape.input.LittleEndianInputStream
+ *                            and com.bbn.openmap.dataAccess.shape.input.LittleEndianOutputStream
+ *
+ * **********************************************************************
+ * <copyright>
+ * 
+ *  BBN Technologies
+ *  10 Moulton Street
+ *  Cambridge, MA 02138
+ *  (617) 873-8000
+ * 
+ *  Copyright (C) BBNT Solutions LLC. All rights reserved.
+ * 
+ * </copyright>
+ * **********************************************************************
+ * 
+ * $Source: /cvs/distapps/openmap/src/openmap/com/bbn/openmap/dataAccess/shape/input/LittleEndianInputStream.java,v $
+ * $Source: /cvs/distapps/openmap/src/openmap/com/bbn/openmap/dataAccess/shape/input/LittleEndianOutputStream.java,v $
+ * $RCSfile: LittleEndianInputStream.java,v $
+ * $RCSfile: LittleEndianOutputStream.java,v $
+ * $Revision: 1.6 $
+ * $Date: 2006/08/25 15:36:15 $
+ * $Author: dietrick $
+ * 
+ * **********************************************************************
+ */
 
 package com.piceadev.shapefile.internal;
 

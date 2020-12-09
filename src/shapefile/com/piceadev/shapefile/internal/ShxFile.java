@@ -3,12 +3,23 @@ package com.piceadev.shapefile.internal;
 import java.util.ArrayList;
 import java.io.IOException;
 
+/**
+ * Class to manage ESRI SHX data.
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
 public class ShxFile extends EsriFile {
     private String filename;
     private ArrayList<EsriIndex> indices;
 
     protected ShxFileHandler fileHandler;
 
+    /**
+     * Constructor.
+     *
+     * @param   filename    File to use. Assumed to have .shx extension.
+     */
     public ShxFile (String filename) throws IOException {
         this.filename = filename;
         fileHandler = new ShxFileHandler (filename);

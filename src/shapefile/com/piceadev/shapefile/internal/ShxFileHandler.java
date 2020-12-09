@@ -10,13 +10,29 @@ import com.piceadev.shapefile.internal.EsriConstants;
 import com.piceadev.shapefile.internal.EsriFileHandler;
 import com.piceadev.shapefile.internal.EsriIndex;
 
+/**
+ * Class to handle read/write operations to ESRI SHP file.
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
 public class ShxFileHandler extends EsriFileHandler {
     private final Logger logger = Logger.getLogger ("com.piceadev.shapefile");
 
+    /**
+     * Constructor.
+     *
+     * @param   filename    File to use. Assumed to have .shx extension.
+     */
     public ShxFileHandler (String filename) throws IOException {
         super(filename);
     }
 
+    /**
+     * Read the file and interpret all shape indices into memory.
+     *
+     * @return  all indices in SHX file.
+     */
     public ArrayList<EsriIndex> getAllIndices () throws IOException {
         this.seek (EsriConstants.HEADER_END); // seek to end of header and start of contents
 
@@ -32,6 +48,11 @@ public class ShxFileHandler extends EsriFileHandler {
         return indices;
     }
 
+    /**
+     * Read the file and get the next shape index in the file.
+     *
+     * @return  a single index.
+     */
     private EsriIndex getNextIndex (int currentSize) throws IOException {
         EsriIndex nextIndex = new EsriIndex ();
 

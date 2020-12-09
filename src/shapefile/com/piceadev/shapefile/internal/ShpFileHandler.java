@@ -11,14 +11,30 @@ import com.piceadev.shapefile.internal.EsriConstants;
 import com.piceadev.shapefile.internal.Shapefile;
 import com.piceadev.shapefile.internal.EsriFileHandler;
 
+/**
+ * Class to handle read/write operations to ESRI SHP file.
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
 public class ShpFileHandler extends EsriFileHandler {
 
     private final Logger logger = Logger.getLogger ("com.piceadev.shapefile");
 
+    /**
+     * Constructor.
+     *
+     * @param   filename    File to use. Assumed to have .shp extension.
+     */
     public ShpFileHandler (String filename) throws IOException {
         super(filename);
     }
 
+    /**
+     * Read the file and interpret all features into memory.
+     *
+     * @return  all features in SHP file.
+     */
     public ArrayList<EsriFeature> getAllFeatures () throws IOException {
         this.seek (EsriConstants.HEADER_END); // seek to end of header and start of contents
 
@@ -34,6 +50,11 @@ public class ShpFileHandler extends EsriFileHandler {
         return features;
     }
 
+    /**
+     * Read the file and get the next feature in the file.
+     *
+     * @return  a single feature, which will be a subclass of EsriFeature.
+     */
     private EsriFeature getNextFeature () throws IOException {
         EsriFeature nextFeature = null;
 

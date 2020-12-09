@@ -235,7 +235,6 @@ public class DbfOutputStream {
 
     public void close() throws IOException {
         _fileHandler.writeByte(26);
-        //_fileHandler.flush(); // no flush() method since converting InputStream to RandomAccessFile
         _fileHandler.close();
     }
 }

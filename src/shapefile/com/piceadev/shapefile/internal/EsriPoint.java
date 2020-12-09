@@ -2,12 +2,18 @@ package com.piceadev.shapefile.internal;
 
 import com.piceadev.shapefile.internal.EsriFeature;
 
+/**
+ * Class to represent an ESRI Point feature.
+ *
+ * @author      Scott Howard    <piceadev@showard.ca>
+ * @version     0.1
+ */
 public class EsriPoint extends EsriFeature {
     double x, y;
 
-    public EsriPoint () {
-    }
-
+    /**
+     * Create EsriPoint at (x,y).
+     */
     public EsriPoint (double x, double y) {
         this.x = x;
         this.y = y;

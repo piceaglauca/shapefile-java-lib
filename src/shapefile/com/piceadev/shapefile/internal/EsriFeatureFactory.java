@@ -10,28 +10,36 @@ import com.piceadev.shapefile.internal.EsriPolygon;
 import com.piceadev.shapefile.internal.EsriConstants;
 import com.piceadev.shapefile.internal.EsriFileHandler;
 
+/**
+ * Generate EsriFeatures from an EsriFileHandler. Record lengths differ by feature 
+ * type.
+ */
 public class EsriFeatureFactory { 
 
     private final static Logger logger = Logger.getLogger ("com.piceadev.shapefile");
 
+    /**
+     * Read a single feature from the EsriFileHandler.
+     *
+     * @param   fileHandler     File from which to read data.
+     * @return  EsriPoint or EsriPolyline. Currently other features are not supported.
+     */
     public static EsriFeature getFeature (EsriFileHandler fileHandler) throws IOException {
         if (! (fileHandler instanceof ShpFileHandler)) {
             logger.log (Level.SEVERE , "Unexpected file handler. Expected type ShpFileHandler.");
             return null; // not sure how I got here...
         }
 
-        // record header
+        // Read record header
         int recordNumber = fileHandler.readInt();
         int recordLength = fileHandler.readInt(); // in 16-bit words
 
         if (recordLength == -1) {
-            return null; // end of file
+            return null; // unexpected end of file
         }
 
         // record content
         int recordShapeType = fileHandler.readLEInt(); // starts with shape type, which must be same as header or null
-        //if (recordShapeType != 0 && recordShapeType != shapeType)
-        //    throw Exception ("invalid shapefile");
 
         EsriFeature feature = null;
         switch (recordShapeType) {
@@ -57,20 +65,31 @@ public class EsriFeatureFactory {
         return feature;
     }
 
+    /**
+     * Read a single EsriPoint feature from the EsriFileHandler.
+     * 
+     * @param   fileHandler     File from which to read data.
+     * @return  EsriPoint
+     */
     private static EsriPoint getPointFeature (EsriFileHandler fileHandler) throws IOException {
-        EsriPoint point = new EsriPoint();
+        double x = fileHandler.readLEDouble();
+        double y = fileHandler.readLEDouble();
 
-        point.setX (fileHandler.readLEDouble());
-        point.setY (fileHandler.readLEDouble());
+        EsriPoint point = new EsriPoint(x, y);
 
-        logger.log (Level.FINE, String.format ("Found Point with coords %f x %f", point.getX (), point.getY ()));
+        logger.log (Level.FINE, String.format ("Found Point with coords %f x %f", x, y));
 
         return point;
     }
 
+    /**
+     * Read a single EsriPolyline feature from the EsriFileHandler.
+     *
+     * @param   fileHandler     File from which to read data.
+     * @return  EsriPolyline
+     */
     private static EsriPolyline getPolylineFeature (EsriFileHandler fileHandler, int contentsLength) 
         throws IOException {
-        EsriPolyline line = new EsriPolyline();
 
         /* double xMin = */fileHandler.readLEDouble();
         /* double yMin = */fileHandler.readLEDouble();
@@ -80,8 +99,9 @@ public class EsriFeatureFactory {
         int numPoints = fileHandler.readLEInt();
 
         logger.log (Level.FINE, String.format ("Polyline feature has %d parts and %d total vertices", numParts, numPoints));
-        line.setNumParts (numParts);
-        line.setNumPoints (numPoints);
+        EsriPolyline line = new EsriPolyline(numParts, numPoints);
+        //line.setNumParts (numParts);
+        //line.setNumPoints (numPoints);
 
         for (int part = 0; part < numParts; part++) {
             int index = fileHandler.readLEInt();
@@ -96,8 +116,6 @@ public class EsriFeatureFactory {
             line.addPoint (point, x, y);
 
             logger.log (Level.FINE, String.format ("Vertex %d coords %f x %f", point, x, y));
-            // or, 
-            // line.addPoint (point, new EsriPoint (fileHandler.readLEDouble (), fileHandler.readLEDouble ())); // dbl X, dbl Y
         }
 
         // if (line.validate ()) {} // check for repeat vertices and remove, and verify a non-zero length in each part
